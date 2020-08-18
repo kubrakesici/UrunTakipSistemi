@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="EntityUrunTakipModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="CategoryTable">
+    <Key>
+      <PropertyRef Name="CategoryId" />
+    </Key>
+    <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="ProductTable" Relationship="Self.FK_ProductTable_CategoryTable" FromRole="CategoryTable" ToRole="ProductTable" />
+  </EntityType>
+  <EntityType Name="CustomerTable">
+    <Key>
+      <PropertyRef Name="CustomerId" />
+    </Key>
+    <Property Name="CustomerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="CustomerSurname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="CustomerCity" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="SaleTable" Relationship="Self.FK_SaleTable_CustomerTable" FromRole="CustomerTable" ToRole="SaleTable" />
+    <Property Name="State" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="ProductTable">
+    <Key>
+      <PropertyRef Name="ProductId" />
+    </Key>
+    <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Brand" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="Stock" Type="Int16" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="State" Type="Boolean" />
+    <Property Name="Category" Type="Int32" />
+    <NavigationProperty Name="CategoryTable" Relationship="Self.FK_ProductTable_CategoryTable" FromRole="ProductTable" ToRole="CategoryTable" />
+    <NavigationProperty Name="SaleTable" Relationship="Self.FK_SaleTable_ProductTable" FromRole="ProductTable" ToRole="SaleTable" />
+  </EntityType>
+  <EntityType Name="SaleTable">
+    <Key>
+      <PropertyRef Name="SaleId" />
+    </Key>
+    <Property Name="SaleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Product" Type="Int32" />
+    <Property Name="Customer" Type="Int32" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Date" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="CustomerTable" Relationship="Self.FK_SaleTable_CustomerTable" FromRole="SaleTable" ToRole="CustomerTable" />
+    <NavigationProperty Name="ProductTable" Relationship="Self.FK_SaleTable_ProductTable" FromRole="SaleTable" ToRole="ProductTable" />
+  </EntityType>
+  <Association Name="FK_ProductTable_CategoryTable">
+    <End Role="CategoryTable" Type="Self.CategoryTable" Multiplicity="0..1" />
+    <End Role="ProductTable" Type="Self.ProductTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CategoryTable">
+        <PropertyRef Name="CategoryId" />
+      </Principal>
+      <Dependent Role="ProductTable">
+        <PropertyRef Name="Category" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleTable_CustomerTable">
+    <End Role="CustomerTable" Type="Self.CustomerTable" Multiplicity="0..1" />
+    <End Role="SaleTable" Type="Self.SaleTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CustomerTable">
+        <PropertyRef Name="CustomerId" />
+      </Principal>
+      <Dependent Role="SaleTable">
+        <PropertyRef Name="Customer" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleTable_ProductTable">
+    <End Role="ProductTable" Type="Self.ProductTable" Multiplicity="0..1" />
+    <End Role="SaleTable" Type="Self.SaleTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductTable">
+        <PropertyRef Name="ProductId" />
+      </Principal>
+      <Dependent Role="SaleTable">
+        <PropertyRef Name="Product" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="EntityUrunTakipEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="CategoryTable" EntityType="Self.CategoryTable" />
+    <EntitySet Name="CustomerTable" EntityType="Self.CustomerTable" />
+    <EntitySet Name="ProductTable" EntityType="Self.ProductTable" />
+    <EntitySet Name="SaleTable" EntityType="Self.SaleTable" />
+    <AssociationSet Name="FK_ProductTable_CategoryTable" Association="Self.FK_ProductTable_CategoryTable">
+      <End Role="CategoryTable" EntitySet="CategoryTable" />
+      <End Role="ProductTable" EntitySet="ProductTable" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleTable_CustomerTable" Association="Self.FK_SaleTable_CustomerTable">
+      <End Role="CustomerTable" EntitySet="CustomerTable" />
+      <End Role="SaleTable" EntitySet="SaleTable" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleTable_ProductTable" Association="Self.FK_SaleTable_ProductTable">
+      <End Role="ProductTable" EntitySet="ProductTable" />
+      <End Role="SaleTable" EntitySet="SaleTable" />
+    </AssociationSet>
+    <FunctionImport Name="MARKAGETIR" ReturnType="Collection(String)" />
+    <EntitySet Name="AdminTable" EntityType="EntityUrunTakipModel.AdminTable" />
+  </EntityContainer>
+  <EntityType Name="AdminTable">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+  </EntityType>
+</Schema>
